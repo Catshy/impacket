@@ -35,12 +35,13 @@ from impacket.dcerpc.v5.dcomrt import DCOMConnection
 from impacket.dcerpc.v5.dcom import wmi
 from impacket.dcerpc.v5.dtypes import NULL
 
-OUTPUT_FILENAME = '__' + str(time.time())
+OUTPUT_FILENAME = '__' + str(time.time())       //以时间作为文件名
 CODEC = sys.stdout.encoding
 
 class WMIEXEC:
     def __init__(self, command='', username='', password='', domain='', hashes=None, aesKey=None, share=None,
                  noOutput=False, doKerberos=False, kdcHost=None):
+        # kerberos是一种认证机制=_=http://blog.csdn.net/wulantian/article/details/42418231
         self.__command = command
         self.__username = username
         self.__password = password
@@ -65,7 +66,7 @@ class WMIEXEC:
                 smbConnection.kerberosLogin(self.__username, self.__password, self.__domain, self.__lmhash,
                                             self.__nthash, self.__aesKey, kdcHost=self.__kdcHost)
 
-            dialect = smbConnection.getDialect()
+            dialect = smbConnection.getDialect()    #新变量,用来判断所使用的是哪个版本的SMB协议
             if dialect == SMB_DIALECT:
                 logging.info("SMBv1 dialect used")
             elif dialect == SMB2_DIALECT_002:
@@ -112,7 +113,7 @@ class RemoteShell(cmd.Cmd):
         self.__share = share
         self.__output = '\\' + OUTPUT_FILENAME
         self.__outputBuffer = unicode('')
-        self.__shell = 'cmd.exe /Q /c '
+        self.__shell = 'cmd.exe /Q /c '      #执行指定的命令并关闭回显
         self.__win32Process = win32Process
         self.__transferClient = smbConnection
         self.__pwd = unicode('C:\\')
@@ -292,7 +293,7 @@ def load_smbclient_auth_file(path):
     for line in open(path):
         lineno+=1
 
-        line = line.strip()
+        line = line.strip() #删除所有的空白符号（\t \n之类也算）
 
         if line.startswith('#') or line=='':
             continue
